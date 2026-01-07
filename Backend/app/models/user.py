@@ -29,10 +29,10 @@ class User(db.Model):
     )
 
     profile: Mapped["JobSeekerProfile"] = relationship(
-        "JobSeekerProfile", back_populates="user", uselist=False
+        "JobSeekerProfile", back_populates="user", uselist=False, cascade="all, delete-orphan"
     )
     company: Mapped["Company"] = relationship(
-        "Company", back_populates="owner", uselist=False
+        "Company", back_populates="owner", uselist=False, cascade="all, delete-orphan"
     )
     jobs: Mapped[list["Job"]] = relationship(
         "Job",

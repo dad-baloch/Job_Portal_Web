@@ -19,6 +19,7 @@ import { AdminPendingJobsPage } from './pages/AdminPendingJobsPage'
 import { AdminJobDetailPage } from './pages/AdminJobDetailPage'
 import { JobApplicantsPage } from './pages/JobApplicantsPage'
 import { DashboardIndexRedirect } from './pages/DashboardIndexRedirect'
+import AdminCreateCompanyPage from './pages/AdminCreateCompanyPage'
 
 export function AppRoutes() {
     return (
@@ -111,8 +112,14 @@ export function AppRoutes() {
                             <AdminJobDetailPage />
                         </ProtectedRoute>
                     }
-                />
-            </Route>
+                />                <Route
+                    path="admin/companies/create"
+                    element={
+                        <ProtectedRoute roles={['admin']}>
+                            <AdminCreateCompanyPage />
+                        </ProtectedRoute>
+                    }
+                />            </Route>
 
             <Route path="/404" element={<NotFoundPage />} />
             <Route path="*" element={<Navigate to="/404" replace />} />

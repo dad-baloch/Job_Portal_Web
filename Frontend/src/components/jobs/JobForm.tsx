@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -9,7 +9,8 @@ import { Select } from '../common/Select'
 import { TagInput } from '../common/TagInput'
 import { RichTextEditor } from '../common/RichTextEditor'
 
-import type { CreateJobPayload, Job, UpdateJobPayload } from '../../types/job.types'
+import type { CreateJobPayload, Job, UpdateJobPayload, Company } from '../../types/job.types'
+import { fetchCompanies } from '../../api/companies'
 
 const schema = z
     .object({
@@ -75,6 +76,8 @@ function jobToDefaults(job: Job): Values {
     }
 }
 
+import { useAuthStore } from '../../store/authStore'
+
 export function JobForm({
     mode,
     initialJob,
@@ -86,6 +89,7 @@ export function JobForm({
     onSubmit: (payload: CreateJobPayload | UpdateJobPayload) => void | Promise<void>
     submitting: boolean
 }) {
+    const role = useAuthStore((s) => s.role)
     const defaults = useMemo<Values>(() => {
         if (initialJob) return jobToDefaults(initialJob)
         return {
@@ -115,6 +119,11 @@ export function JobForm({
     })
 
     const [skills, setSkills] = useState<string[]>(defaults.skills)
+    const [companies, setCompanies] = useState<Company[]>([])
+
+    useEffect(() => {
+        fetchCompanies().then(setCompanies).catch(console.error)
+    }, [])
 
     const description = watch('description')
 
@@ -186,8 +195,15 @@ export function JobForm({
                 </label>
 
                 <div>
-                    <label className="text-sm font-medium">Company ID (optional)</label>
-                    <Input type="number" {...register('company_id')} />
+                    <label className="text-sm font-medium">Company</label>
+                    <Select {...register('company_id')}>
+                        <option value="">-- Select Company --</option>
+                        {companies.map((c) => (
+                            <option key={c.id} value={c.id}>
+                                {c.name}
+                            </option>
+                        ))}
+                    </Select>
                     {errors.company_id ? (
                         <p className="mt-1 text-xs text-red-600">{errors.company_id.message}</p>
                     ) : null}

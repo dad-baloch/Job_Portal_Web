@@ -1,15 +1,17 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 
 import { Button } from '../components/common/Button'
 import { Card } from '../components/common/Card'
 import { Modal } from '../components/common/Modal'
+import { Pagination } from '../components/common/Pagination'
 import { Select } from '../components/common/Select'
 import { useAdminDeleteJob, useAdminJobs, useApproveJob, useDisapproveJob } from '../hooks/useAdminJobs'
 import { formatRelativeDate } from '../utils/formatDate'
 import { getApiErrorMessage } from '../utils/apiErrors'
 import type { AdminApprovalFilter } from '../api/admin'
+import { resetDemoData } from '../api/admin'
 
 export function AdminPendingJobsPage() {
     const navigate = useNavigate()
@@ -23,15 +25,47 @@ export function AdminPendingJobsPage() {
     const disapprove = useDisapproveJob()
     const deleteMutation = useAdminDeleteJob()
     const [deleteId, setDeleteId] = useState<number | null>(null)
+    const [isResetting, setIsResetting] = useState(false)
 
     const total = jobs.data?.total ?? 0
+    // No longer strict need for totalPages memo here for manual buttons, but Pagination uses it internally or we pass props.
+    // However, we can keep it if we want. But the Pagination component calculates it too.
     const totalPages = useMemo(() => Math.max(1, Math.ceil(total / perPage)), [total, perPage])
+
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+    }, [page])
+
+    const handleReset = async () => {
+        if (!window.confirm('Are you sure you want to reset all demo data? This will clear all temporary users and jobs, restoring the clean demo state. Permanent admin remains.')) {
+            return
+        }
+        setIsResetting(true)
+        try {
+            await resetDemoData()
+            toast.success('Demo data reset successfully!')
+            window.location.reload()
+        } catch (error) {
+            toast.error(getApiErrorMessage(error))
+        } finally {
+            setIsResetting(false)
+        }
+    }
 
     return (
         <div className="mx-auto max-w-6xl space-y-4">
-            <div>
-                <h1 className="text-2xl font-semibold">Job Moderation</h1>
-                <p className="text-sm text-gray-600">Approve, disapprove, or delete jobs.</p>
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <h1 className="text-2xl font-semibold">Job Moderation</h1>
+                    <p className="text-sm text-gray-600">Approve, disapprove, or delete jobs.</p>
+                </div>
+                <Button
+                    variant="danger"
+                    onClick={handleReset}
+                    isLoading={isResetting}
+                >
+                    Smart Reset Demo Data
+                </Button>
             </div>
 
             <Card>
@@ -121,24 +155,13 @@ export function AdminPendingJobsPage() {
                                 </div>
                             ))}
 
-                            <div className="flex items-center justify-between pt-2">
-                                <Button
-                                    variant="secondary"
-                                    onClick={() => setPage((p) => Math.max(1, p - 1))}
-                                    disabled={page <= 1}
-                                >
-                                    Prev
-                                </Button>
-                                <div className="text-sm text-gray-600">
-                                    Page {page} / {totalPages}
-                                </div>
-                                <Button
-                                    variant="secondary"
-                                    onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                                    disabled={page >= totalPages}
-                                >
-                                    Next
-                                </Button>
+                            <div className="pt-2">
+                                <Pagination
+                                    page={page}
+                                    perPage={perPage}
+                                    total={total}
+                                    onPageChange={setPage}
+                                />
                             </div>
                         </div>
                     ) : (

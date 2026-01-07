@@ -18,6 +18,11 @@ export async function fetchAdminJobs(args: {
     return res.data
 }
 
+export async function resetDemoData() {
+    const res = await apiClient.post<{ message: string }>('/admin/reset-demo-data')
+    return res.data
+}
+
 export async function fetchPendingJobs(args: {
     page?: number
     perPage?: number

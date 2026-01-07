@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import toast from 'react-hot-toast'
 
@@ -15,6 +15,10 @@ import { getApiErrorMessage } from '../utils/apiErrors'
 export function MyJobsPage() {
     const [page, setPage] = useState(1)
     const [perPage, setPerPage] = useState(50)
+
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+    }, [page])
 
     const { data, isLoading, isError } = useMyJobs({ page, perPage })
     const items = data?.items ?? []

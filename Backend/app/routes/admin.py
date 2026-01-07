@@ -9,10 +9,29 @@ from app.models import Job
 from app.routes.utils import get_current_user, require_role
 from app.schemas import JobSchema
 
+# Import seeder logic lazily or here if needed
+# from app.seeder import run_seeder_logic
 
 admin_bp = Blueprint("admin", __name__)
 job_schema = JobSchema()
 job_list_schema = JobSchema(many=True)
+
+
+@admin_bp.post("/reset-demo-data")
+@jwt_required()
+def reset_demo_data():
+    user = get_current_user()
+    forbidden = require_role(user, {"admin"})
+    if forbidden:
+        return forbidden
+
+    try:
+        from app.seeder import run_seeder_logic
+        run_seeder_logic()
+        return jsonify({"message": "Demo data has been successfully reset."}), 200
+    except Exception as e:
+        current_app.logger.error(f"Reset failed: {e}")
+        return jsonify({"message": "Failed to reset data.", "error": str(e)}), 500
 
 
 @admin_bp.get("/jobs")

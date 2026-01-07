@@ -143,10 +143,17 @@ def create_job():
         job_type = "full-time"
 
     company_id = payload.get("company_id")
+
+    # Auto-assign company if the user is an employer and has a company
+    if not company_id and user.role.value == "employer":
+        if user.company:
+            company_id = user.company.id
+
     if company_id:
         company = Company.query.get(company_id)
         if not company:
             return jsonify({"message": "Company not found"}), 404
+
     job = Job()
     job.title = title
     job.description = description

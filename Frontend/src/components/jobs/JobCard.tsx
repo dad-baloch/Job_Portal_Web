@@ -35,8 +35,13 @@ export function JobCard({
                     </div>
 
                     <div className="mt-1 text-sm text-gray-600">
-                        {job.company?.name ? <span>{job.company.name}</span> : <span>Company</span>}
-                        {job.location ? <span> • {job.location}</span> : null}
+                        {job.company?.name && <span>{job.company.name}</span>}
+                        {job.location && (
+                            <span>
+                                {job.company?.name ? ' • ' : ''}
+                                {job.location}
+                            </span>
+                        )}
                     </div>
 
                     <div className="mt-3 flex flex-wrap items-center gap-2">

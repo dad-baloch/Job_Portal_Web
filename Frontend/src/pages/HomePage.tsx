@@ -14,9 +14,9 @@ import { getApiErrorMessage } from '../utils/apiErrors'
 import type { UserRole } from '../types/auth.types'
 
 const DEMO = {
-    job_seeker: { email: 'seeker@example.com', password: 'Password123!' },
-    employer: { email: 'employer@example.com', password: 'Password123!' },
-    admin: { email: 'admin@example.com', password: 'Password123!' },
+    job_seeker: { email: 'seeker@demo.com', password: 'demo123' },
+    employer: { email: 'employer@demo.com', password: 'demo123' },
+    admin: { email: 'admin@demo.com', password: 'demo123' },
 } as const
 
 export function HomePage() {

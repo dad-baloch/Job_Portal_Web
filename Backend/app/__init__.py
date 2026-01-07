@@ -23,12 +23,14 @@ def register_blueprints(app: Flask) -> None:
     from app.routes.applications import applications_bp
     from app.routes.saved_jobs import saved_jobs_bp
     from app.routes.admin import admin_bp
+    from app.routes.companies import companies_bp
 
     app.register_blueprint(auth_bp, url_prefix="/api/auth")
     app.register_blueprint(jobs_bp, url_prefix="/api/jobs")
     app.register_blueprint(applications_bp, url_prefix="/api/applications")
     app.register_blueprint(saved_jobs_bp, url_prefix="/api/saved-jobs")
     app.register_blueprint(admin_bp, url_prefix="/api/admin")
+    app.register_blueprint(companies_bp, url_prefix="/api/companies")
 
 
 def register_error_handlers(app: Flask) -> None:

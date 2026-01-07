@@ -34,11 +34,11 @@ export function LoginForm() {
         defaultValues: { rememberMe: true },
     })
 
-    const onSubmit = async (values: FormValues) => {
+    const onSubmit = async (values: FormValues, isDemoLogin = false) => {
         setServerError(null)
         try {
             const data = await login({ email: values.email, password: values.password })
-            setAuth({ token: data.token, user: data.user, rememberMe: values.rememberMe })
+            setAuth({ token: data.token, user: data.user, rememberMe: values.rememberMe, isDemo: isDemoLogin })
             toast.success('Logged in')
             navigate('/jobs')
         } catch (err) {
@@ -51,12 +51,44 @@ export function LoginForm() {
         }
     }
 
+    const demoLogin = (role: 'admin' | 'employer' | 'seeker') => {
+        let email = ''
+        const password = 'demo123'
+
+        if (role === 'admin') email = 'admin@demo.com'
+        if (role === 'employer') email = 'employer@demo.com'
+        if (role === 'seeker') email = 'seeker@demo.com'
+
+        onSubmit({ email, password, rememberMe: true }, true)
+    }
+
     return (
         <Card className="p-6">
             <h1 className="text-xl font-semibold">Login</h1>
             <p className="mt-1 text-sm text-gray-600">Access your account</p>
 
-            <form className="mt-6 space-y-4" onSubmit={handleSubmit(onSubmit)}>
+            <div className="mt-4 grid grid-cols-3 gap-2">
+                <Button variant="outline" size="sm" onClick={() => demoLogin('admin')} disabled={isSubmitting} className="text-xs px-1">
+                    Demo Admin
+                </Button>
+                <Button variant="outline" size="sm" onClick={() => demoLogin('employer')} disabled={isSubmitting} className="text-xs px-1">
+                    Demo Employer
+                </Button>
+                <Button variant="outline" size="sm" onClick={() => demoLogin('seeker')} disabled={isSubmitting} className="text-xs px-1">
+                    Demo Seeker
+                </Button>
+            </div>
+
+            <div className="relative my-4">
+                <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t border-gray-200" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-white px-2 text-gray-500">Or login with email</span>
+                </div>
+            </div>
+
+            <form className="mt-6 space-y-4" onSubmit={handleSubmit((d) => onSubmit(d, false))}>
                 {serverError ? (
                     <div className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
                         {serverError}

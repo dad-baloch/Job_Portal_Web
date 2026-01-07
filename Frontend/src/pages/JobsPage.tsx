@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 
 import { Breadcrumbs } from '../components/common/Breadcrumbs'
 import { Button } from '../components/common/Button'
@@ -28,6 +28,10 @@ export function JobsPage() {
     const [perPage, setPerPage] = useState(20)
     const [view, setView] = useState<'grid' | 'list'>('grid')
     const [showFilters, setShowFilters] = useState(false)
+
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+    }, [page])
 
     const { data, isLoading, isError } = useJobs({ filters: queryFilters, page, perPage })
 
@@ -76,8 +80,8 @@ export function JobsPage() {
                 </div>
             </div>
 
-            <div className="mt-6 grid gap-6 md:grid-cols-[280px_1fr]">
-                <div className={`${showFilters ? 'block' : 'hidden'} md:block`}>
+            <div className="mt-6 grid gap-6 md:grid-cols-[280px_1fr] items-start">
+                <div className={`${showFilters ? 'block' : 'hidden'} md:block sticky top-24 z-10`}>
                     <JobFilters
                         value={filters}
                         onChange={(next) => {
