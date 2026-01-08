@@ -6,6 +6,7 @@ import clsx from 'clsx'
 
 import { APP_NAME } from '../../constants'
 import { useAuthStore } from '../../store/authStore'
+import logoImage from '../../assets/daad_jobportal.png'
 
 function navLinkClass({ isActive }: { isActive: boolean }): string {
     return clsx(
@@ -48,9 +49,7 @@ export function Navbar() {
             <div className="mx-auto max-w-7xl px-4 flex items-center justify-between gap-3">
                 {/* Logo Area */}
                 <Link to="/" className="flex items-center gap-2 group">
-                    <div className="md:w-10 md:h-10 w-8 h-8 rounded-xl bg-gradient-to-br from-brand to-brand-dark flex items-center justify-center text-white shadow-lg shadow-brand/20 group-hover:shadow-brand/40 transition-all">
-                        <Briefcase className="w-5 h-5" />
-                    </div>
+                    <img src={logoImage} alt="Logo" className="md:w-10 md:h-10 w-8 h-8 object-contain" />
                     <div className="flex flex-col leading-none">
                         <span className="font-bold text-xl tracking-tight text-gray-900 group-hover:text-brand-dark transition-colors">
                             {APP_NAME}
