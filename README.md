@@ -438,6 +438,14 @@ If you see "Subject must be a string" errors:
 - Verify CORS_ORIGINS in backend .env includes your frontend URL
 - Check that frontend VITE_API_URL matches backend URL
 
+## ScreenShots
+<img width="1364" height="653" alt="Screenshot from 2026-01-08 14-56-31" src="https://github.com/user-attachments/assets/850295f9-60b3-4720-a708-7a40affb4fde" />
+<img width="1364" height="653" alt="Screenshot from 2026-01-08 14-56-46" src="https://github.com/user-attachments/assets/f05cd191-b79f-4239-bcb1-4f494fad2256" />
+[Screencast from 2026-01-08 14-52-33.webm](https://github.com/user-attachments/assets/dec48763-a905-48ed-ad1f-44f33ce23b07)
+<img width="1364" height="653" alt="Screenshot from 2026-01-08 14-57-16" src="https://github.com/user-attachments/assets/69b8c220-3c2e-4e2e-9cc8-a2f44a15e79c" />
+<img width="1364" height="653" alt="Screenshot from 2026-01-08 14-57-39" src="https://github.com/user-attachments/assets/048dfae1-8d59-4455-889d-2173d038104a" />
+
+
 ## 📝 Notes
 
 - The application uses JWT tokens with a 12-hour expiration
